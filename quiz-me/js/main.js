@@ -7,8 +7,8 @@ var muscles = [
   "teres major",
   "triceps (long head)",
   "triceps (short head)",
-  "rhomboid major",
   "rhomboid minor",
+  "rhomboid major",
   "latissimus dorsi",
   "levator scapulae"
 ];
