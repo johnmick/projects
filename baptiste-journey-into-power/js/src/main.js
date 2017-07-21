@@ -4,7 +4,7 @@ var poses = {
   "Savasana": [ "330px", "1497px", "83px", "49px" ],
   "Butterfly": [ "239px", "1497px", "83px", "49px" ],
   "Supine Twist": [ "56px", "1499px", "81px", "41px" ],
-  "Dead Man's Pose": [ "896px", "1398px", "70px", "40px" ],
+  "Deaf Man's Pose": [ "896px", "1398px", "70px", "40px" ],
   "Plow Pose": [ "794px", "1390px", "84px", "54px" ],
   "Shoulderstand Headstand Waterfall": [ "728px", "1366px", "38px", "76px" ],
   "Fish": [ "608px", "1396px", "85px", "38px" ],
@@ -58,31 +58,164 @@ var poses = {
   "Samashtiti with 3 OMs": [ "434px", "37px", "60px", "72px" ]
 };
 
+var sequence = [
+  { n: "Integration" },
+  "Child's Pose",
+  "Downward Facing Dog",
+  "Ragdoll",
+  "Extended Mountain",
+  "Samashtiti with 3 OMs",
+  { n: "Awakening:Sun Salutation A (x5)" },
+  "Extended Mountain",
+  "Forward Fold",
+  "Half Lift",
+  "Chaturanga Dandasana",
+  "Upward Facing Dog",
+  "Downward Facing Dog",
+  "Forward Fold",
+  { n: "Awakening:Sun Salutation B (x5)" },
+  "Thunderbolt",
+  "Forward Fold",
+  "Half Lift",
+  "Chaturanga Dandasana",
+  "Upward Facing Dog",
+  "Downward Facing Dog",
+  "Warrior 1",
+  "Chaturanga Dandasana",
+  "Upward Facing Dog",
+  "Downward Facing Dog",
+  "Warrior 1",
+  "Chaturanga Dandasana",
+  "Upward Facing Dog",
+  "Downward Facing Dog",
+  "Side Plank",
+  "Vinyasa",
+  { n: "Vitality" },
+  "Crescent Lunge",
+  "Hands to Heart Center Twist",
+  "Warrior 2",
+  "Extended Side Angle",
+  "Vinyasa",
+  "Thunderbolt Prayer",
+  "Peace Fingers",
+  "Gorilla",
+  "Crow",
+  { n: "Equanimity" },
+  "Eagle 2x",
+  "Extended Leg Raise",
+  "Airplane",
+  "Half Moon",
+  "Dancer's Pose 2x",
+  "Tree",
+  { n: "Grounding:Sun Salutation A (x5)" },
+  "Forward Fold",
+  "Half Lift",
+  "Chaturanga Dandasana",
+  "Upward Facing Dog",
+  "Downward Facing Dog",
+  "Warrior 1",
+  "Warrior 2",
+  "Triangle",
+  "Side Facing Wide Leg Forward Bend",
+  "Namaste Front Facing Forward Fold",
+  "Twisting Triangle",
+  "Chaturanga Dandasana",
+  "Upward Facing Dog",
+  "Downward Facing Dog",
+  "Warrior 1",
+  "Warrior 2",
+  "Triangle",
+  "Side Facing Wide Leg Forward Bend",
+  "Namaste Front Facing Forward Fold",
+  "Twisting Triangle",
+  "Vinyasa into other side",
+  { n: "Igniting" },
+  "Locust 2x",
+  "Floor Bow 2x",
+  "Upward Facing Dog",
+  "Camel 2x",
+  "Bridge",
+  "Wheel 6x",
+  "Supta Baddha Konasana",
+  "Dead Bug",
+  { n: "Stability" },
+  "Scissor Legs 50x",
+  "60/30 Lift 10x",
+  "Abdominal Twists 50x",
+  "High to Low 10x",
+  { n: "Opening" },
+  "Half Pigeon",
+  "Double Pigeon",
+  "Frog",
+  { n: "Release" },
+  "Seated Single Leg Extension",
+  "Seated Forward Bend",
+  "Reverse Tabletop",
+  "Fish",
+  { n: "Rejuvination" },
+  "Shoulderstand Headstand Waterfall",
+  "Plow Pose",
+  "Deaf Man's Pose",
+  { n: "Deep Rest" },
+  "Supine Twist",
+  "Supta Baddha Konasana",
+  "Savasana",
+  "3 OMS"
+];
+
+
+
 var card  = document.getElementById("card");
 var label = document.getElementById("label");
-function setCard(opts, name) {
-  card.style.backgroundPosition = "-" + opts[0] + " -" + opts[1]; 
-  card.style.width              = opts[2];
-  card.style.height             = opts[3];
-  label.innerHTML               = name;
+function setCard(opts) {
+  if (opts === undefined) {
+    card.style.visibility = "hidden";
+  } else {
+    card.style.backgroundPosition = "-" + opts[0] + " -" + opts[1]; 
+    card.style.width              = opts[2];
+    card.style.height             = opts[3];
+    card.style.visibility = "visible";
+  }
+}
+function setLabel(name) {
+  label.innerHTML = name;
 }
 
-var p = [];
-for (var pose in poses)
-  p.push(pose);
+var statusBar = document.getElementById("status_bar");
+function setStatus(name) {
+  statusBar.innerHTML = name;
+}
+
+var counter = 0;
 function advance() {
-	cardIndex += 1;
-	if (cardIndex > p.length - 1)
-		cardIndex = 0;
-  var name = p[cardIndex];
-  setCard(poses[name], name);
+  var name = sequence[cardIndex];
+  if (typeof(name) === "object") {
+    setStatus(name.n);
+    cardIndex++;
+    advance();
+  } else {
+    setCard(poses[name]);
+    if (counter === 1 || poses[name] === undefined) {
+      setLabel(name);
+    } else {
+      setLabel("&nbsp;");
+    }
+
+    counter++;
+    if (counter % 2 === 0 || poses[name] === undefined) {
+      cardIndex += 1;
+      if (cardIndex > sequence.length - 1)
+        cardIndex = 0;
+      counter = 0;
+    }
+  }
 }
 setTimeout(function() {
   card.style.display = "block";
   advance();
-  setInterval(advance, 2000);
-  document.body.onclick = advance;
-}, 3000);
+  //setInterval(advance, 2000);
+  document.body.addEventListener("touchstart", advance, false);
+}, 2000);
 
 ////////////////////////////////////////////// 
 // var counts = {}

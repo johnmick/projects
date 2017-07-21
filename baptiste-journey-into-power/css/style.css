@@ -15,12 +15,19 @@ body {
   text-align: center;
   font-family: monospace;
 }
+#status_bar {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+
+}
 
 .outer {
 	display: table;
 	position: absolute;
 	height: 100%;
 	width: 100%;
+  overflow: hidden;
 }
 
 .middle {
